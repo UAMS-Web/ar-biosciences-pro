@@ -27,6 +27,15 @@ function brief_css(): void
     $color_link = get_theme_mod('brief_link_color', $appearance['default-colors']['link']);
     $logo = wp_get_attachment_image_src(get_theme_mod('custom_logo'), 'full');
 
+    // The values that add no logo CSS, used when the logo attachment cannot be read.
+    $logo_max_width = 350;
+    // Only 200 and 1 are compared against this height, so a height of 1 or -1 behaves as 0.
+    // @pest-mutate-ignore: DecrementInteger, IncrementInteger
+    $logo_effective_height = 0;
+    // The padding rule also needs a height above 1, which these defaults never give, so any padding is inert.
+    // @pest-mutate-ignore: DecrementInteger, IncrementInteger
+    $logo_padding = 0;
+
     if ($logo) {
         $logo_height = absint($logo[2]);
         $logo_max_width = get_theme_mod('brief_logo_width', 350);
