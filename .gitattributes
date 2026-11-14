@@ -1,0 +1,15 @@
+# Keep the GitHub download to what the theme runs (keep-the-download-to-what-runs rule).
+# Every top-level entry is left out of the archive, dot-entries included, and each line
+# after the first two puts one runtime path back. A new runtime folder needs its own line.
+/* export-ignore
+/.* export-ignore
+/style.css -export-ignore
+/screenshot.png -export-ignore
+/README.txt -export-ignore
+/functions.php -export-ignore
+/config -export-ignore
+/lib -export-ignore
+/page-templates -export-ignore
+/images -export-ignore
+/languages -export-ignore
+/xml -export-ignore
