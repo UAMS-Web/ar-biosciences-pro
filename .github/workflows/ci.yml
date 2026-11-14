@@ -1,0 +1,71 @@
+name: CI
+
+# Calls the shared job chain in UAMS-Web/uams-ci-workflows. The `uses:` reference names a release
+# tag, never a branch, so a change to the shared chain reaches this repository only when the tag
+# here moves.
+#
+# The RUN_REMOTE_CI gate: both jobs run only when the repository variable RUN_REMOTE_CI is
+# `true`. With it unset, a pull request starts no job. `CI` carries the same gate, so with the
+# switch off it is skipped, and a skipped required check lets a pull request merge without any job
+# having run. Require `CI` only while the switch is on.
+#
+# The last job, `CI`, is the one check a ruleset requires from this workflow (with the two
+# pull-request-body checks, `Attribution footer` and `Closing keywords`). It needs the call, runs
+# always (when gated in), and fails unless the call reports `success`. Do not rename `CI`, and do
+# not rename the `checks` job without changing `needs:` below.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  # Lets the workflow be run on demand against a branch.
+  workflow_dispatch:
+
+# A new push to a pull request cancels that pull request's stale run. Every other run gets a
+# group of its own, keyed on the commit, so a later push never cancels it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  # The shared chain. Its checks report as `checks / <job name> (<operating system>)`.
+  checks:
+    if: vars.RUN_REMOTE_CI == 'true'
+    uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.10.1
+    with:
+      linux-only: true
+      # Mutation testing is off until its own ticket.
+      mutate: false
+      floor-lint: true
+      floor-lint-php: '8.2'
+      # The theme has no lint script: parse every first-party PHP file under the floor version.
+      floor-lint-command: find . -name '*.php' -not -path './vendor/*' -not -path './tests/Integration/vendor/*' -print0 | xargs -0 -n1 php -l > /dev/null
+      # The suite is the Unit process only, so `composer test` (which needs a JUnit report and a
+      # skip baseline) is not used.
+      pest-command: composer test:unit
+
+  # The one check a ruleset requires from this workflow. Keep `needs:` naming the call.
+  ci:
+    name: CI
+    needs: [checks]
+    if: always() && vars.RUN_REMOTE_CI == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # `skipped` and `cancelled` fail as well as `failure`: a call that did not run proved nothing.
+      - name: Every needed job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Needed job results: $RESULTS"
+          # An empty list would run no iterations and pass having read nothing.
+          if [ -z "$RESULTS" ]; then echo "::error::No needed job results to read"; exit 1; fi
+          for result in $RESULTS; do
+            if [ "$result" != "success" ]; then
+              echo "::error::A needed job reported $result"
+              exit 1
+            fi
+          done
