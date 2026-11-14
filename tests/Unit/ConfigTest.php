@@ -22,7 +22,13 @@ use function Brain\Monkey\Functions\when;
  */
 function brief_load_config(string $name): array
 {
-    return require __DIR__.'/../../config/'.$name.'.php';
+    $config = require __DIR__.'/../../config/'.$name.'.php';
+
+    if (! is_array($config)) {
+        throw new UnexpectedValueException("config/{$name}.php does not return an array.");
+    }
+
+    return $config;
 }
 
 test('accessibility lists the Genesis accessibility features', function (): void {

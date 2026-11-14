@@ -20,11 +20,11 @@ add_filter('simple_social_default_styles', 'brief_social_default_styles');
  * @param  array<string, mixed>  $defaults  Social style defaults.
  * @return array<string, mixed> Modified social style defaults.
  */
-function brief_social_default_styles($defaults)
+function brief_social_default_styles($defaults): array
 {
 
     $args = genesis_get_config('simple-social-icons-settings');
 
-    return wp_parse_args($args, $defaults);
+    return array_merge($defaults, $args);
 
 }

@@ -80,7 +80,7 @@ function brief_genesis_responsive_menus_exists(bool $exists): void
     when('function_exists')->alias(
         static fn (string $name): bool => $name === 'genesis_register_responsive_menus'
             ? $exists
-            : relay(func_get_args())
+            : relay(func_get_args()) === true
     );
 }
 

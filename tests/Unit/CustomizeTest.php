@@ -56,7 +56,9 @@ test('the Customizer registers the color settings, the logo width setting and th
         'default-colors' => ['text' => '#aaa111', 'link' => '#bbb222'],
     ]);
 
-    $manager = Mockery::mock(WP_Customize_Manager::class);
+    // WordPress declares `WP_Customize_Manager` final, so PHPStan types a mock of it as `never`.
+    // The double is a plain mock, handed to the function that expects the real class.
+    $manager = Mockery::mock();
 
     $manager->shouldReceive('add_setting')->once()->with('brief_text_color', brief_identical([
         'default' => '#aaa111',
@@ -97,6 +99,7 @@ test('the Customizer registers the color settings, the logo width setting and th
         ],
     ]));
 
+    // @phpstan-ignore argument.type (the double stands in for the final `WP_Customize_Manager`)
     brief_customizer_register($manager);
 });
 

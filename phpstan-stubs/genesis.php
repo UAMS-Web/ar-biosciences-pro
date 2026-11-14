@@ -25,7 +25,7 @@ declare(strict_types=1);
  *     default-colors: array{text: string, link: string},
  *     editor-color-palette: list<array{name: string, slug: string, color: string}>,
  *     editor-font-sizes: list<array{name: string, size: float|int, slug: string}>,
- * } : ($config is 'post-type-supports' ? array<string, list<string>> : array<mixed>))
+ * } : ($config is 'post-type-supports' ? array<string, list<string>> : ($config is 'simple-social-icons-settings' ? array<string, mixed> : array<mixed>)))
  */
 function genesis_get_config(string $config): array
 {
