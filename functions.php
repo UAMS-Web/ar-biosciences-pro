@@ -24,7 +24,7 @@ add_action('after_setup_theme', 'brief_localization_setup');
  *
  * @since 1.0.0
  */
-function brief_localization_setup()
+function brief_localization_setup(): void
 {
 
     load_child_theme_textdomain(genesis_get_theme_handle(), get_stylesheet_directory().'/languages');
@@ -55,8 +55,9 @@ add_action('after_setup_theme', 'genesis_child_gutenberg_support');
  *
  * @since 2.7.0
  */
-function genesis_child_gutenberg_support() // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- using same in all child themes to allow action to be unhooked.
-{require_once get_stylesheet_directory().'/lib/gutenberg/init.php';
+function genesis_child_gutenberg_support(): void // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- using same in all child themes to allow action to be unhooked.
+{
+    require_once get_stylesheet_directory().'/lib/gutenberg/init.php';
 }
 
 // Registers the responsive menus.
@@ -70,7 +71,7 @@ add_action('wp_enqueue_scripts', 'brief_enqueue_scripts_styles');
  *
  * @since 1.0.0
  */
-function brief_enqueue_scripts_styles()
+function brief_enqueue_scripts_styles(): void
 {
 
     $appearance = genesis_get_config('appearance');
@@ -103,7 +104,7 @@ add_action('after_setup_theme', 'brief_theme_support', 9);
  *
  * @since 3.0.0
  */
-function brief_theme_support()
+function brief_theme_support(): void
 {
 
     $theme_supports = genesis_get_config('theme-supports');
@@ -122,7 +123,7 @@ add_action('after_setup_theme', 'brief_post_type_support', 9);
  *
  * @since 3.0.0
  */
-function brief_post_type_support()
+function brief_post_type_support(): void
 {
 
     $post_type_supports = genesis_get_config('post-type-supports');
@@ -189,7 +190,7 @@ add_filter('genesis_edit_post_link', '__return_false');
 
 // Modifies the Genesis content limit read more link
 add_filter('get_the_content_more_link', 'brief_read_more_link');
-function brief_read_more_link()
+function brief_read_more_link(): string
 {
     return '... <a class="more-link" href="'.get_permalink().'">Continue Reading</a>';
 }
@@ -203,7 +204,7 @@ add_filter('genesis_author_box_gravatar_size', 'brief_author_box_gravatar');
  * @param  int  $size  Original icon size.
  * @return int Modified icon size.
  */
-function brief_author_box_gravatar($size)
+function brief_author_box_gravatar($size): int
 {
 
     return 90;
@@ -231,8 +232,6 @@ function brief_comments_gravatar($args)
 /**
  * Plugin Name: ABI Impact Report Embed
  */
-add_shortcode('abi_impact_report', function () {
-    return '<iframe src="https://www.blackberrybriar.com/impact-reports/abi/"'
-        .' title="Arkansas Biosciences Institute Impact Report"'
-        .' loading="lazy" style="width:100%;height:100vh;border:0"></iframe>';
-});
+add_shortcode('abi_impact_report', fn (): string => '<iframe src="https://www.blackberrybriar.com/impact-reports/abi/"'
+    .' title="Arkansas Biosciences Institute Impact Report"'
+    .' loading="lazy" style="width:100%;height:100vh;border:0"></iframe>');
