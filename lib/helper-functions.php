@@ -49,9 +49,13 @@ function brief_color_brightness($color, $change): string
 
     $hexcolor = str_replace('#', '', $color);
 
-    $red = hexdec(substr($hexcolor, 0, 2));
-    $green = hexdec(substr($hexcolor, 2, 2));
-    $blue = hexdec(substr($hexcolor, 4, 2));
+    // `hexdec()` of two hex digits is at most 255 and so is already an int; the cast only gives PHPStan that type.
+    // @pest-mutate-ignore: RemoveIntegerCast
+    $red = (int) hexdec(substr($hexcolor, 0, 2));
+    // @pest-mutate-ignore: RemoveIntegerCast
+    $green = (int) hexdec(substr($hexcolor, 2, 2));
+    // @pest-mutate-ignore: RemoveIntegerCast
+    $blue = (int) hexdec(substr($hexcolor, 4, 2));
 
     $red = max(0, min(255, $red + $change));
     $green = max(0, min(255, $green + $change));

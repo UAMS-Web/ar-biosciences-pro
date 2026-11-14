@@ -73,7 +73,7 @@ function brief_blocks_body_classes($classes)
         return $classes;
     }
 
-    $post_object = get_post(get_the_ID());
+    $post_object = get_post();
     $blocks = (array) parse_blocks($post_object->post_content);
 
     if (isset($blocks[0]['blockName'])) {
