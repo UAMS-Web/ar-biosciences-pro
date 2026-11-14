@@ -22,7 +22,6 @@ declare(strict_types=1);
  */
 function brief_color_contrast($color): string
 {
-
     $hexcolor = str_replace('#', '', $color);
     $red = hexdec(substr($hexcolor, 0, 2));
     $green = hexdec(substr($hexcolor, 2, 2));
