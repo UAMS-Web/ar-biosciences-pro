@@ -41,10 +41,10 @@ function brief_run_css(array $mods, array|false $logo, bool $hasLogo): array
     when('get_theme_mod')->alias(
         static fn (string $name, mixed $default = false): mixed => $mods[$name] ?? $default
     );
-    when('absint')->alias(static fn (mixed $value): int => abs((int) $value));
+    when('absint')->alias(static fn (float|int|string $value): int => abs((int) $value));
     when('has_custom_logo')->justReturn($hasLogo);
     when('genesis_get_theme_handle')->justReturn('brief-handle');
-    Functions\expect('wp_get_attachment_image_src')->once()->with(42, 'full')->andReturn($logo);
+    Functions\expect('wp_get_attachment_image_src')->once()->with($mods['custom_logo'] ?? 0, 'full')->andReturn($logo);
     when('wp_add_inline_style')->alias(
         static function (string $handle, string $css) use (&$calls): void {
             $calls[] = [$handle, $css];
@@ -64,6 +64,10 @@ test('loading the file hooks brief_css to wp_enqueue_scripts', function (): void
 
 test('default colors and no logo add no inline style', function (): void {
     expect(brief_run_css(['custom_logo' => 42], false, false))->toBe([]);
+});
+
+test('a site with no custom logo set asks for attachment 0 and adds no style', function (): void {
+    expect(brief_run_css([], false, false))->toBe([]);
 });
 
 test('a changed text color adds the text rules only', function (): void {

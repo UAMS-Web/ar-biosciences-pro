@@ -157,6 +157,8 @@ test('loading functions.php loads the theme files, hooks the functions and adjus
 
     require_once __DIR__.'/../../functions.php';
 
+    $embed = is_callable($shortcode) ? $shortcode() : null;
+
     expect($GLOBALS['brief_fake_includes'])->toBe([
         'parent/lib/init.php',
         'child/lib/theme-defaults.php',
@@ -166,7 +168,7 @@ test('loading functions.php loads the theme files, hooks the functions and adjus
         'child/lib/woocommerce/woocommerce-setup.php',
         'child/lib/woocommerce/woocommerce-output.php',
         'child/lib/woocommerce/woocommerce-notice.php',
-    ])->and($shortcode())->toBe(
+    ])->and($embed)->toBe(
         '<iframe src="https://www.blackberrybriar.com/impact-reports/abi/"'
         .' title="Arkansas Biosciences Institute Impact Report"'
         .' loading="lazy" style="width:100%;height:100vh;border:0"></iframe>'

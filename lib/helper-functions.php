@@ -64,3 +64,39 @@ function brief_color_brightness($color, $change): string
     return '#'.dechex($red).dechex($green).dechex($blue);
 
 }
+
+/**
+ * Reads a theme modification that holds a string, such as a color.
+ *
+ * @since 1.0.2
+ *
+ * @param  string  $name  The theme modification name.
+ * @param  string  $default  The value to use when the modification is unset or is not a string.
+ * @return string The modification, or the default.
+ */
+function brief_theme_mod_string(string $name, string $default): string
+{
+
+    $value = get_theme_mod($name, $default);
+
+    return is_string($value) ? $value : $default;
+
+}
+
+/**
+ * Reads a theme modification that holds a whole number, such as an attachment ID or a width.
+ *
+ * @since 1.0.2
+ *
+ * @param  string  $name  The theme modification name.
+ * @param  int  $default  The value to use when the modification is unset or is not numeric.
+ * @return int The modification as an integer, or the default.
+ */
+function brief_theme_mod_int(string $name, int $default): int
+{
+
+    $value = get_theme_mod($name, $default);
+
+    return is_numeric($value) ? (int) $value : $default;
+
+}

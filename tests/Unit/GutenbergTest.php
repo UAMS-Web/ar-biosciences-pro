@@ -211,7 +211,6 @@ test('the content width is the filtered config width', function (): void {
 test('the front-end CSS carries the colors, font sizes and palette', function (): void {
     brief_load_gutenberg();
     when('genesis_get_theme_handle')->justReturn('brief');
-    when('get_theme_support')->justReturn([brief_gutenberg_appearance()['editor-font-sizes']]);
 
     $calls = [];
     when('wp_add_inline_style')->alias(
@@ -252,10 +251,12 @@ test('the editor CSS carries the colors', function (): void {
 
 test('font size CSS has one rule per size', function (): void {
     brief_load_gutenberg();
-    when('get_theme_support')->justReturn([[
-        ['name' => 'Small', 'size' => 14, 'slug' => 'small'],
-        ['name' => 'Big', 'size' => 30.5, 'slug' => 'big'],
-    ]]);
+    when('genesis_get_config')->justReturn([
+        'editor-font-sizes' => [
+            ['name' => 'Small', 'size' => 14, 'slug' => 'small'],
+            ['name' => 'Big', 'size' => 30.5, 'slug' => 'big'],
+        ],
+    ]);
 
     $css = brief_inline_font_sizes();
 
@@ -265,16 +266,12 @@ test('font size CSS has one rule per size', function (): void {
         ->and($css)->toContain('font-size: 30.5px;');
 });
 
-test('font size CSS is empty without theme support', function (mixed $support): void {
+test('font size CSS is empty when the config lists no sizes', function (): void {
     brief_load_gutenberg();
-    when('get_theme_support')->justReturn($support);
+    when('genesis_get_config')->justReturn(['editor-font-sizes' => []]);
 
     expect(brief_inline_font_sizes())->toBe('');
-})->with([
-    'false' => [false],
-    'an empty list' => [[]],
-    'support declared with no sizes' => [[[]]],
-]);
+});
 
 test('palette CSS has a color and background rule per color', function (): void {
     brief_load_gutenberg();
