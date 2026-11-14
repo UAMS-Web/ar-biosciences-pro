@@ -68,6 +68,7 @@ parameters:
         - lib
         - page-templates
         - functions.php
+        - XXXsingle.php
         - tests
 
     # The Integration suite's own Composer setup (the tests skill): its vendor/
