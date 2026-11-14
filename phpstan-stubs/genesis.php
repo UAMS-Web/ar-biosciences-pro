@@ -13,7 +13,19 @@
 declare(strict_types=1);
 
 /**
- * @return array<mixed>
+ * Genesis loads `config/<name>.php` and returns the array it returns. The `appearance` file is this
+ * theme's own, so its shape is stated here; every other name stays loosely typed.
+ *
+ * @return ($config is 'appearance' ? array{
+ *     fonts-url: string,
+ *     content-width: int,
+ *     text-color: string,
+ *     link-color: string,
+ *     button-color: string,
+ *     default-colors: array{text: string, link: string},
+ *     editor-color-palette: list<array{name: string, slug: string, color: string}>,
+ *     editor-font-sizes: list<array{name: string, size: float|int, slug: string}>,
+ * } : ($config is 'post-type-supports' ? array<string, list<string>> : array<mixed>))
  */
 function genesis_get_config(string $config): array
 {

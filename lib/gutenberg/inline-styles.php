@@ -92,23 +92,19 @@ CSS;
 }
 
 /**
- * Generate CSS for editor font sizes from the provided theme support.
+ * Generate CSS for the editor font sizes in the appearance config.
  *
  * @since 2.9.0
  *
- * @return string The CSS for editor font sizes if theme support was declared.
+ * @return string The CSS for the editor font sizes.
  */
 function brief_inline_font_sizes(): string
 {
 
     $css = '';
-    $editor_font_sizes = get_theme_support('editor-font-sizes');
+    $appearance = genesis_get_config('appearance');
 
-    if (! $editor_font_sizes) {
-        return '';
-    }
-
-    foreach ($editor_font_sizes[0] as $font_size) {
+    foreach ($appearance['editor-font-sizes'] as $font_size) {
         $css .= <<<CSS
 		.site-container .has-{$font_size['slug']}-font-size {
 			font-size: {$font_size['size']}px;

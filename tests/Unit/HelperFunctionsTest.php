@@ -1,7 +1,8 @@
 <?php
 
 /**
- * The color helpers in lib/helper-functions.php, which call no WordPress function.
+ * The helpers in lib/helper-functions.php: the color helpers, which call no WordPress function,
+ * and the typed theme-mod readers, which call `get_theme_mod()`.
  *
  * `brief_color_brightness()` pins current behavior (a characterization): each channel is
  * written with `dechex()` and no padding, so a channel below 0x10 becomes one digit and the
@@ -11,6 +12,8 @@
  */
 
 declare(strict_types=1);
+
+use Brain\Monkey\Functions;
 
 it('picks white text on a dark color and dark grey text on a light one', function (string $color, string $expected): void {
     expect(brief_color_contrast($color))->toBe($expected);
@@ -61,4 +64,43 @@ it('lightens and darkens a color by the change', function (string $color, int $c
     'red clamps alone' => ['#f01010', 32, '#ff3030'],
     'green clamps alone' => ['#10f010', 32, '#30ff30'],
     'blue clamps alone' => ['#1010f0', 32, '#3030ff'],
+]);
+
+it('reads a string theme mod and passes the default through', function (): void {
+    Functions\expect('get_theme_mod')->once()->with('brief_text_color', '#333')->andReturn('#111111');
+
+    expect(brief_theme_mod_string('brief_text_color', '#333'))->toBe('#111111');
+});
+
+it('falls back to the default when a string theme mod is not a string', function (mixed $stored): void {
+    Functions\expect('get_theme_mod')->once()->with('brief_text_color', '#333')->andReturn($stored);
+
+    expect(brief_theme_mod_string('brief_text_color', '#333'))->toBe('#333');
+})->with([
+    'false' => [false],
+    'null' => [null],
+    'an integer' => [7],
+    'an array' => [['#111111']],
+]);
+
+it('reads an integer theme mod, converting a numeric value', function (mixed $stored, int $expected): void {
+    Functions\expect('get_theme_mod')->once()->with('brief_logo_width', 350)->andReturn($stored);
+
+    expect(brief_theme_mod_int('brief_logo_width', 350))->toBe($expected);
+})->with([
+    'an integer' => [600, 600],
+    'a numeric string' => ['600', 600],
+    'a float string drops the fraction' => ['600.9', 600],
+    'zero' => [0, 0],
+]);
+
+it('falls back to the default when an integer theme mod is not numeric', function (mixed $stored): void {
+    Functions\expect('get_theme_mod')->once()->with('brief_logo_width', 350)->andReturn($stored);
+
+    expect(brief_theme_mod_int('brief_logo_width', 350))->toBe(350);
+})->with([
+    'false' => [false],
+    'null' => [null],
+    'text' => ['wide'],
+    'an array' => [[600]],
 ]);
