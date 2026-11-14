@@ -1,0 +1,12 @@
+{
+    "blacklist": [
+        "vendor"
+    ],
+    "whitelist": [
+        "vendor/brain"
+    ],
+    "redefinable-internals": [
+        "class_exists",
+        "function_exists"
+    ]
+}
