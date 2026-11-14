@@ -46,3 +46,20 @@ function genesis_unregister_layout(string $id = ''): bool
 }
 
 function genesis(): void {}
+
+function genesis_do_nav(): void {}
+
+function genesis_do_subnav(): void {}
+
+function genesis_post_info(): void {}
+
+function genesis_post_meta(): void {}
+
+function genesis_entry_footer_markup_open(): void {}
+
+function genesis_entry_footer_markup_close(): void {}
+
+function __genesis_return_full_width_content(): string
+{
+    return '';
+}

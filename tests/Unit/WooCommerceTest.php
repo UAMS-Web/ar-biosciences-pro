@@ -350,7 +350,7 @@ test('switching themes clears every recorded dismissal', function (): void {
     $GLOBALS['wpdb'] = (object) ['prefix' => 'wp_'];
     Functions\expect('get_users')->once()->with([
         'meta_key' => 'wp_brief_woocommerce_message_dismissed',
-        'meta_value' => 1,
+        'meta_value' => '1',
     ])->andReturn([(object) ['ID' => 3], (object) ['ID' => 4]]);
     Functions\expect('delete_user_option')->once()->with(3, 'brief_woocommerce_message_dismissed');
     Functions\expect('delete_user_option')->once()->with(4, 'brief_woocommerce_message_dismissed');

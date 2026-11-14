@@ -56,7 +56,7 @@ test('the Customizer registers the color settings, the logo width setting and th
         'default-colors' => ['text' => '#aaa111', 'link' => '#bbb222'],
     ]);
 
-    $manager = Mockery::mock();
+    $manager = Mockery::mock(WP_Customize_Manager::class);
 
     $manager->shouldReceive('add_setting')->once()->with('brief_text_color', brief_identical([
         'default' => '#aaa111',
@@ -90,7 +90,7 @@ test('the Customizer registers the color settings, the logo width setting and th
         'description' => 'The maximum width of the logo in pixels.',
         'priority' => 9,
         'section' => 'title_tagline',
-        'settings' => 'brief_logo_width',
+        'settings' => ['default' => 'brief_logo_width'],
         'type' => 'number',
         'input_attrs' => [
             'min' => 100,
@@ -103,7 +103,7 @@ test('the Customizer registers the color settings, the logo width setting and th
 test('a valid logo width adds no error and returns the validity object', function (mixed $width): void {
     require_once __DIR__.'/../../lib/customize.php';
 
-    $validity = Mockery::mock();
+    $validity = Mockery::mock(WP_Error::class);
     $validity->shouldNotReceive('add');
 
     expect(brief_validate_logo_width($validity, $width))->toBe($validity);
@@ -118,7 +118,7 @@ test('a missing or non-numeric logo width is required', function (mixed $width):
 
     when('__')->returnArg(1);
 
-    $validity = Mockery::mock();
+    $validity = Mockery::mock(WP_Error::class);
     $validity->shouldReceive('add')->once()->with('required', 'You must supply a valid number.');
 
     expect(brief_validate_logo_width($validity, $width))->toBe($validity);
@@ -134,7 +134,7 @@ test('a logo width under 100 is too small', function (mixed $width): void {
 
     when('__')->returnArg(1);
 
-    $validity = Mockery::mock();
+    $validity = Mockery::mock(WP_Error::class);
     $validity->shouldReceive('add')->once()->with('logo_too_small', 'The logo width cannot be less than 100.');
 
     expect(brief_validate_logo_width($validity, $width))->toBe($validity);
