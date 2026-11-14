@@ -24,6 +24,7 @@
             <directory suffix=".php">./lib</directory>
             <directory suffix=".php">./page-templates</directory>
             <file>./functions.php</file>
+            <file>./XXXsingle.php</file>
         </include>
     </source>
 </phpunit>
