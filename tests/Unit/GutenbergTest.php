@@ -113,6 +113,16 @@ test('a post with no blocks gets has-no-blocks', function (): void {
     expect(brief_blocks_body_classes(['single']))->toBe(['single', 'has-no-blocks']);
 });
 
+test('body classes are untouched when there is no post to read blocks from', function (): void {
+    brief_load_gutenberg();
+    when('is_singular')->justReturn(true);
+    when('has_blocks')->justReturn(true);
+    Functions\expect('get_post')->once()->withNoArgs()->andReturn(null);
+    Functions\expect('parse_blocks')->never();
+
+    expect(brief_blocks_body_classes(['single']))->toBe(['single']);
+});
+
 test('the first block adds its name and alignment classes', function (
     mixed $blocks,
     array $expected
