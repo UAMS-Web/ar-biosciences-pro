@@ -38,6 +38,8 @@ function brief_css(): void
 
     $css = '';
 
+    // The first append to the empty string gives the same result as an assignment.
+    // @pest-mutate-ignore: ConcatEqualToEqual
     $css .= ($appearance['default-colors']['text'] !== $color_text) ? sprintf(
         '
 
