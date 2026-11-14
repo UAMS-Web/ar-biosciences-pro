@@ -68,6 +68,7 @@ function brief_customizer_register($wp_customize): void
 
     $wp_customize->add_setting(
         'brief_logo_width',
+        // @phpstan-ignore argument.type (the WordPress stubs type `default` as string; WordPress accepts any value, and this one is the integer width)
         [
             'default' => 350,
             'sanitize_callback' => 'absint',
@@ -83,7 +84,7 @@ function brief_customizer_register($wp_customize): void
             'description' => __('The maximum width of the logo in pixels.', 'brief'),
             'priority' => 9,
             'section' => 'title_tagline',
-            'settings' => 'brief_logo_width',
+            'settings' => ['default' => 'brief_logo_width'],
             'type' => 'number',
             'input_attrs' => [
                 'min' => 100,
