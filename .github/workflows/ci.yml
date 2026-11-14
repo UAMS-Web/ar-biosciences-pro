@@ -37,8 +37,9 @@ jobs:
     uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.10.1
     with:
       linux-only: true
-      # Mutation testing is off until its own ticket.
-      mutate: false
+      # Scratch run for the closing record of #14: mutation on, never merged.
+      mutate: true
+      mutate-ignore-paths: lib tests
       floor-lint: true
       floor-lint-php: '8.2'
       # The theme has no lint script: parse every first-party PHP file under the floor version.

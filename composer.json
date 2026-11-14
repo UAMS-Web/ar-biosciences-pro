@@ -33,7 +33,8 @@
         "test:refactor": "rector --dry-run",
         "test:refactor:sweep": "rector --dry-run --clear-cache --config=rector-sweep.php",
         "pint": "pint",
-        "test:pint": "pint --test"
+        "test:pint": "pint --test",
+        "mutate": "bash scripts/mutate-closing.sh"
     },
     "scripts-descriptions": {
         "test": "Run the test suite (the Unit suite only; no Integration suite exists yet).",
