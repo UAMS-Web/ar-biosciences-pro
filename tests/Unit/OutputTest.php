@@ -141,3 +141,8 @@ test('a logo adds nothing when its effective height gives no padding or rules', 
 test('the logo rules are skipped when the site has no custom logo', function (): void {
     expect(brief_run_css(['custom_logo' => 42, 'brief_logo_width' => 600], [0, 1200, 600], false))->toBe([]);
 });
+
+test('a custom logo whose attachment cannot be read adds no logo rules', function (): void {
+    // Without defaults for the logo values, this case printed `max-width: px;`.
+    expect(brief_run_css(['custom_logo' => 42], false, true))->toBe([]);
+});
