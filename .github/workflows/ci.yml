@@ -46,6 +46,8 @@ jobs:
       # The suite is the Unit process only, so `composer test` (which needs a JUnit report and a
       # skip baseline) is not used.
       pest-command: composer test:unit
+      download-archive: true
+      download-archive-command: node .claude/skills/download-archive-check/check-download-archive.mjs
 
   # The one check a ruleset requires from this workflow. Keep `needs:` naming the call.
   ci:
