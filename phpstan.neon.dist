@@ -107,8 +107,13 @@ parameters:
 
     # Genesis, the parent theme, is not a Composer package: its functions are declared
     # for analysis only, in this stub file. See the file header.
+    #
+    # Patchwork is indexed so the tests can call `Patchwork\relay()`, which hands a
+    # redefined internal function (`class_exists()`, `function_exists()`) back to the
+    # real one for names a test does not answer.
     scanFiles:
         - phpstan-stubs/genesis.php
+        - vendor/antecedent/patchwork/Patchwork.php
 
     # Constants defined from a function call (`define('MY_PLUGIN_URL',
     # plugin_dir_url(__FILE__))`, `plugin_dir_path()`, and similar) are often
