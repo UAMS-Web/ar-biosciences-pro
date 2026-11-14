@@ -78,7 +78,7 @@ test('loading the files hooks every function and declares the gallery support', 
     expectActionAdded('wp_ajax_brief_dismiss_woocommerce_notice')->once()->with('brief_dismiss_woocommerce_notice');
     expectActionAdded('admin_enqueue_scripts')->once()->with('brief_notice_script');
     expectActionAdded('switch_theme')->once()->with('brief_reset_woocommerce_notice', 10, 2);
-    expectActionAdded('deactivated_plugin')->once()->with('brief_reset_woocommerce_notice_on_deactivation', 10, 2);
+    expectActionAdded('deactivated_plugin')->once()->with('brief_reset_woocommerce_notice_on_deactivation');
 
     Functions\expect('add_theme_support')->once()->with('wc-product-gallery-lightbox');
     Functions\expect('add_theme_support')->once()->with('wc-product-gallery-slider');
@@ -121,7 +121,7 @@ test('pagination uses the Genesis arrows and keeps the other arguments', functio
 test('the gallery thumbnail is 180 pixels square and cropped', function (): void {
     brief_load_woocommerce();
 
-    expect(brief_gallery_image_thumbnail(['width' => 100]))->toBe(['width' => 180, 'height' => 180, 'crop' => 1]);
+    expect(brief_gallery_image_thumbnail())->toBe(['width' => 180, 'height' => 180, 'crop' => 1]);
 });
 
 test('image sizes are set when activating the theme with WooCommerce installed', function (): void {
@@ -376,7 +376,7 @@ test('deactivating WooCommerce or Genesis Connect clears the dismissals', functi
     $GLOBALS['wpdb'] = (object) ['prefix' => 'wp_'];
     Functions\expect('get_users')->once()->andReturn([]);
 
-    brief_reset_woocommerce_notice_on_deactivation($plugin, false);
+    brief_reset_woocommerce_notice_on_deactivation($plugin);
 
     unset($GLOBALS['wpdb']);
 })->with([
@@ -388,5 +388,5 @@ test('deactivating another plugin leaves the dismissals', function (): void {
     brief_load_woocommerce();
     Functions\expect('get_users')->never();
 
-    brief_reset_woocommerce_notice_on_deactivation('akismet/akismet.php', false);
+    brief_reset_woocommerce_notice_on_deactivation('akismet/akismet.php');
 });
