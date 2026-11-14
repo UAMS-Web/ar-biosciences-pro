@@ -27,6 +27,7 @@
     "scripts": {
         "test": "@test:unit",
         "test:unit": "pest",
+        "mutate": "bash scripts/mutate.sh",
         "stan": "phpstan analyse --no-progress --memory-limit=2G",
         "refactor": "rector",
         "refactor:sweep": "rector --clear-cache --config=rector-sweep.php",

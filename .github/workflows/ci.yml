@@ -37,8 +37,11 @@ jobs:
     uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.10.1
     with:
       linux-only: true
-      # Mutation testing is off until its own ticket.
-      mutate: false
+      # Mutation testing: a pull request or a push mutates the changed first-party files, and a
+      # scheduled or dispatched run mutates all of them, through `composer mutate`
+      # (scripts/mutate.sh, which maps each file to the test file that covers it).
+      mutate-paths: config lib page-templates functions.php XXXsingle.php
+      mutate-ignore-paths: config lib page-templates tests
       floor-lint: true
       floor-lint-php: '8.2'
       # The theme has no lint script: parse every first-party PHP file under the floor version.
