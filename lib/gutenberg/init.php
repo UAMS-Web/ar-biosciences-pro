@@ -74,6 +74,11 @@ function brief_blocks_body_classes($classes)
     }
 
     $post_object = get_post();
+
+    if ($post_object === null) {
+        return $classes;
+    }
+
     $blocks = (array) parse_blocks($post_object->post_content);
 
     if (isset($blocks[0]['blockName'])) {
