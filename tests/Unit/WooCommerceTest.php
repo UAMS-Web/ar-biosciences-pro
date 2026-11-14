@@ -29,8 +29,8 @@ require_once __DIR__.'/../Stubs/WC_Admin_Notices.php';
 /**
  * Report which classes and functions exist.
  *
- * @param  list<string>  $classes  Classes that exist.
- * @param  list<string>  $functions  Functions that exist.
+ * @param  array<string>  $classes  Classes that exist.
+ * @param  array<string>  $functions  Functions that exist.
  */
 function brief_woocommerce_exists(array $classes, array $functions = []): void
 {
@@ -254,9 +254,9 @@ test('the Genesis Connect notice is removed only when WC_Admin_Notices exists', 
 /**
  * Run the theme notice with the given conditions and return what it echoed.
  *
- * @param  list<string>  $classes
- * @param  list<string>  $functions
- * @param  list<string>  $caps  Capabilities the user holds.
+ * @param  array<string>  $classes
+ * @param  array<string>  $functions
+ * @param  array<string>  $caps  Capabilities the user holds.
  */
 function brief_run_theme_notice(array $classes, array $functions, array $caps, mixed $dismissed): string
 {

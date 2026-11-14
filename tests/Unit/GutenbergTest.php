@@ -120,8 +120,7 @@ test('the first block adds its name and alignment classes', function (
     brief_load_gutenberg();
     when('is_singular')->justReturn(true);
     when('has_blocks')->justReturn(true);
-    when('get_the_ID')->justReturn(7);
-    Functions\expect('get_post')->once()->with(7)->andReturn((object) ['post_content' => 'markup']);
+    Functions\expect('get_post')->once()->withNoArgs()->andReturn((object) ['post_content' => 'markup']);
     Functions\expect('parse_blocks')->once()->with('markup')->andReturn($blocks);
 
     expect(brief_blocks_body_classes(['single']))->toBe($expected);
