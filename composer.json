@@ -1,0 +1,15 @@
+{
+    "name": "uams-web/ar-biosciences-pro",
+    "description": "AR Biosciences Pro, a Genesis child theme. Development-only: the theme ships without Composer.",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.2"
+    },
+    "config": {
+        "platform": {
+            "php": "8.4.27"
+        },
+        "sort-packages": true
+    }
+}
