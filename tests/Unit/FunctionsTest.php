@@ -284,7 +284,7 @@ test('the read more link points at the permalink', function (): void {
 test('the author box Gravatar is 90 pixels', function (): void {
     brief_load_functions();
 
-    expect(brief_author_box_gravatar(70))->toBe(90);
+    expect(brief_author_box_gravatar())->toBe(90);
 });
 
 test('the comment Gravatar is 60 pixels and keeps the other arguments', function (): void {
