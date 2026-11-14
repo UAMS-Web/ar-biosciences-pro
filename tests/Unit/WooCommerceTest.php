@@ -27,6 +27,27 @@ use function Patchwork\relay;
 require_once __DIR__.'/../Stubs/WC_Admin_Notices.php';
 
 /**
+ * Keep the strings of a dataset's list, which Pest hands the test untyped.
+ *
+ * @param  array<mixed>  $values
+ * @return list<string>
+ */
+function brief_string_list(array $values): array
+{
+    return array_values(array_filter($values, is_string(...)));
+}
+
+/**
+ * Build the URL the theme notice's install link is made from: the stand-in for `add_query_arg()`.
+ *
+ * @param  array<string, string>  $args
+ */
+function brief_query_arg_stub(array $args, string $url): string
+{
+    return sprintf('%s?action=%s&plugin=%s', $url, $args['action'], $args['plugin']);
+}
+
+/**
  * Report which classes and functions exist.
  *
  * @param  array<string>  $classes  Classes that exist.
@@ -39,12 +60,12 @@ function brief_woocommerce_exists(array $classes, array $functions = []): void
     when('class_exists')->alias(
         static fn (string $name): bool => in_array($name, ['WooCommerce', 'WC_Admin_Notices'], true)
             ? in_array($name, $classes, true)
-            : relay(func_get_args())
+            : relay(func_get_args()) === true
     );
     when('function_exists')->alias(
         static fn (string $name): bool => $name === 'gencwooc_setup'
             ? in_array($name, $functions, true)
-            : relay(func_get_args())
+            : relay(func_get_args()) === true
     );
 }
 
@@ -276,9 +297,7 @@ function brief_run_theme_notice(array $classes, array $functions, array $caps, m
         }
     });
     when('network_admin_url')->alias(static fn (string $path): string => 'https://admin.test/'.$path);
-    when('add_query_arg')->alias(
-        static fn (array $args, string $url): string => $url.'?action='.$args['action'].'&plugin='.$args['plugin']
-    );
+    when('add_query_arg')->alias('brief_query_arg_stub');
     when('wp_nonce_url')->alias(static fn (string $url, string $action): string => $url.'&_wpnonce='.$action);
 
     ob_start();
@@ -287,16 +306,24 @@ function brief_run_theme_notice(array $classes, array $functions, array $caps, m
     return (string) ob_get_clean();
 }
 
-test('the theme notice stays quiet unless it applies', function (
-    array $classes,
-    array $functions,
-    array $caps,
-    mixed $dismissed
-): void {
-    brief_load_woocommerce();
+test(
+    'the theme notice stays quiet unless it applies',
+    function (
+        array $classes,
+        array $functions,
+        array $caps,
+        mixed $dismissed
+    ): void {
+        brief_load_woocommerce();
 
-    expect(brief_run_theme_notice($classes, $functions, $caps, $dismissed))->toBe('');
-})->with([
+        expect(brief_run_theme_notice(
+            brief_string_list($classes),
+            brief_string_list($functions),
+            brief_string_list($caps),
+            $dismissed
+        ))->toBe('');
+    }
+)->with([
     'WooCommerce missing' => [[], [], ['manage_woocommerce'], false],
     'Genesis Connect active' => [['WooCommerce'], ['gencwooc_setup'], ['manage_woocommerce'], false],
     'no WooCommerce access' => [['WooCommerce'], [], [], false],
@@ -351,9 +378,10 @@ test('switching themes clears every recorded dismissal', function (): void {
     Functions\expect('get_users')->once()->with([
         'meta_key' => 'wp_brief_woocommerce_message_dismissed',
         'meta_value' => '1',
-    ])->andReturn([(object) ['ID' => 3], (object) ['ID' => 4]]);
-    Functions\expect('delete_user_option')->once()->with(3, 'brief_woocommerce_message_dismissed');
-    Functions\expect('delete_user_option')->once()->with(4, 'brief_woocommerce_message_dismissed');
+        'fields' => 'ID',
+    ])->andReturn(['3', '4']);
+    Functions\expect('delete_user_option')->once()->with(Mockery::on(static fn (mixed $id): bool => $id === 3), 'brief_woocommerce_message_dismissed');
+    Functions\expect('delete_user_option')->once()->with(Mockery::on(static fn (mixed $id): bool => $id === 4), 'brief_woocommerce_message_dismissed');
 
     brief_reset_woocommerce_notice();
 

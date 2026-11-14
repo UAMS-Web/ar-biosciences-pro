@@ -85,8 +85,10 @@ function brief_blocks_body_classes($classes)
         $classes[] = 'first-block-'.str_replace('/', '-', $blocks[0]['blockName']);
     }
 
-    if (isset($blocks[0]['attrs']['align'])) {
-        $classes[] = 'first-block-align-'.$blocks[0]['attrs']['align'];
+    $align = $blocks[0]['attrs']['align'] ?? null;
+
+    if (is_string($align)) {
+        $classes[] = 'first-block-align-'.$align;
     }
 
     return $classes;

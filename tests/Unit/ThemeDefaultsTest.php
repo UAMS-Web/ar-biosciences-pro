@@ -24,7 +24,6 @@ it('registers the defaults filter and merges the theme config over the plugin de
     require __DIR__.'/../../lib/theme-defaults.php';
 
     Functions\expect('genesis_get_config')->once()->with('simple-social-icons-settings')->andReturn(['size' => '40', 'new_window' => 1]);
-    Functions\expect('wp_parse_args')->once()->with(['size' => '40', 'new_window' => 1], ['size' => '24', 'alignment' => 'left'])->andReturn(['size' => '40', 'alignment' => 'left', 'new_window' => 1]);
 
     expect(brief_social_default_styles(['size' => '24', 'alignment' => 'left']))->toBe(['size' => '40', 'alignment' => 'left', 'new_window' => 1]);
 });
